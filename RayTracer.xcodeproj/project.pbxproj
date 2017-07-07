@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		180C94C71F0B60650019BEAD /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 180C94C51F0B60650019BEAD /* BSpline.cpp */; };
 		18171C981F03935C00902931 /* Jitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18171C961F03935C00902931 /* Jitter.cpp */; };
+		1841D81B1F0F606B0056A317 /* BVH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841D8191F0F606B0056A317 /* BVH.cpp */; };
 		18773C451EA5AC4B00CC2508 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18773C441EA5AC4B00CC2508 /* main.cpp */; };
 		18773C4C1EA5AC8200CC2508 /* 3DObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18773C4B1EA5AC8200CC2508 /* 3DObject.cpp */; };
 		18773C511EA5C0FC00CC2508 /* 2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18773C501EA5C0FC00CC2508 /* 2D.cpp */; };
@@ -37,6 +38,8 @@
 		180C94C61F0B60650019BEAD /* BSpline.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BSpline.hpp; sourceTree = "<group>"; };
 		18171C961F03935C00902931 /* Jitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Jitter.cpp; sourceTree = "<group>"; };
 		18171C971F03935C00902931 /* Jitter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Jitter.hpp; sourceTree = "<group>"; };
+		1841D8191F0F606B0056A317 /* BVH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BVH.cpp; sourceTree = "<group>"; };
+		1841D81A1F0F606B0056A317 /* BVH.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BVH.hpp; sourceTree = "<group>"; };
 		18773C411EA5AC4B00CC2508 /* RayTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RayTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		18773C441EA5AC4B00CC2508 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		18773C4B1EA5AC8200CC2508 /* 3DObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3DObject.cpp; sourceTree = "<group>"; };
@@ -105,6 +108,8 @@
 				18171C971F03935C00902931 /* Jitter.hpp */,
 				180C94C51F0B60650019BEAD /* BSpline.cpp */,
 				180C94C61F0B60650019BEAD /* BSpline.hpp */,
+				1841D8191F0F606B0056A317 /* BVH.cpp */,
+				1841D81A1F0F606B0056A317 /* BVH.hpp */,
 			);
 			path = RayTracer;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 			files = (
 				18773C531EA5F21000CC2508 /* camera.cpp in Sources */,
 				18773C451EA5AC4B00CC2508 /* main.cpp in Sources */,
+				1841D81B1F0F606B0056A317 /* BVH.cpp in Sources */,
 				18B424621EDFE1890066EED6 /* SolidNoise.cpp in Sources */,
 				18773C511EA5C0FC00CC2508 /* 2D.cpp in Sources */,
 				18773C571EA610B300CC2508 /* director.cpp in Sources */,
