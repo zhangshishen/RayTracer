@@ -41,7 +41,7 @@ public:
     vector3 operator+(const vector3& a) const;
     vector3 cross(const vector3 &a) const;
     vector3 operator-(const vector3& a) const;
-    
+    double operator[](int a) const;
     bool isZero();
     void normalize();
     bool operator==(const vector3&) const;

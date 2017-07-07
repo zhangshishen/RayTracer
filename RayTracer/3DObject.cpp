@@ -60,6 +60,11 @@ vector3 vector3::operator-(const vector3& a) const{
     ret.setPos(x-a.x, y-a.y, z-a.z);
     return ret;
 }
+double vector3::operator[](int a) const{
+    if(a==0) return x;
+    if(a==1) return y;
+    else return z;
+}
 bool vector3::isZero(){
     return (x==0.0)&&(y==0.0)&&(z==0.0);
 }
