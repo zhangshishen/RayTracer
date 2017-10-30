@@ -1,5 +1,7 @@
 #include "SolidNoise.hpp"
-#define INTERVAL 50
+//#define INTERVAL 25
+
+int INTERVAL = 100;
 
 vector3 randomVector(){     //随机向量生成,
     
@@ -116,8 +118,8 @@ std::vector<std::vector<float>> SolidNoise(int x,int y){ //主方法体，返回
         
         for(int j = 0;j<y;j++){
             
-            res[i][j] = (effect(i,j,vec)+1)*0.8;
-            
+            //res[i][j] = (effect(i,j,vec)+1)*0.8;
+            res[i][j] = (effect(i,j,vec));
         }
         
     }

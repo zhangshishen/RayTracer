@@ -29,5 +29,13 @@ Director* Director::getDirector(){
     return _dir;
 }
 RGB Director::draw(int x,int y,int nx,int ny){
+    if(_cam->bTree==NULL) {
+        _cam->bTree = new BoundaryTree();
+        std::vector<Triangle*> s;
+        for(auto& a:triSet){
+            s.push_back(&a);
+        }
+        _cam->bTree->Create(s, 0);
+    }
     return _cam->draw(x, y, nx, ny, triSet, lightSet);
 }

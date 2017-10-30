@@ -21,7 +21,7 @@ Triangle* sphere::getT(int &n){
     return triangle;
 }
 cube::cube(){}
-cube::cube(vector3 p1,double size,RGB rgb){
+cube::cube(vector3 p1,float size,RGB rgb){
     vector3 center = p1+vector3(size/2,size/2,size/2);
     vector3 p2 = p1+vector3(size,0,0);
     vector3 p3 = p1+vector3(size,0,size);

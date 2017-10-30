@@ -11,6 +11,7 @@
 #include "camera.h"
 #define MAX(a,b) (a)>(b)?(a):(b)
 
+#define BVH
 Camera::Camera(){
     pos = vector3(20,80.0,-140);
     u.setPos(1.0, 0, 0);
@@ -27,7 +28,7 @@ void Camera::shade(const Light& light, const vector3& intePoint , const vector3&
     RGB ret;
     vector3 l = light.pos-intePoint;
     l.normalize();
-    double col = MAX(l*n,0);
+    float col = MAX(l*n,0);
     r=r*col;
 
 }
@@ -38,7 +39,7 @@ void Camera::BFshade(const Light& light, const vector3& intePoint , const vector
     v.normalize();
     auto h = l+v;
     h.normalize();
-    double col = MAX(n*h,0);
+    float col = MAX(n*h,0);
     col = pow(col,pn);
     r = r*col;
 }
@@ -48,15 +49,15 @@ RGB Camera::Reflect(const vector3& intePoint,Light l,const std::vector<Triangle>
     //auto normal = near.vn;
     //normal.normalize();
     auto reflect = intePoint - origin;
-    double ma =-(near.vn*reflect);
-    double mb =sqrt(near.vn.lengthSquare());
+    float ma =-(near.vn*reflect);
+    float mb =sqrt(near.vn.lengthSquare());
     auto normal=near.vn*(ma/mb);
     
     //reflect.normalize();
     reflect=reflect+normal*2;
     Triangle nearest;
-    double smallt=1/0.0;
-    intersect(0.0000000001,intePoint, reflect, t, nearest, smallt);
+    float smallt=1/0.0;
+    intersect(0.001,intePoint, reflect, t, nearest, smallt);
     RGB ret;
     if(smallt==1/0.0){
         ret.setColor(0, 0, 0);
@@ -67,11 +68,13 @@ RGB Camera::Reflect(const vector3& intePoint,Light l,const std::vector<Triangle>
     vector3 iPoint(intePoint+reflect*smallt);
     return ColorFromPoint(iPoint,l,t,nearest);
 }
-bool Camera::intersect(double m,const vector3& origin,vector3& direction,const std::vector<Triangle>& t,Triangle& nearest,double &f){
-    double smallt=1/0.0;
-    double ru,rv,rt;
+bool Camera::intersect(float m,const vector3& origin,vector3& direction,const std::vector<Triangle>& t,Triangle& nearest,float &f){
+    float smallt=1/0.0;
+#ifndef BVH
+    
+    float ru,rv,rt;
     // intersect check
-    double mo = m;
+    float mo = m;
     for(auto& tri:t){
         if(IntersectTriangle(origin,direction,tri.v[0],tri.v[1],tri.v[2],&rt,&ru,&rv)){
             if(rt<smallt&&rt>mo){
@@ -81,7 +84,13 @@ bool Camera::intersect(double m,const vector3& origin,vector3& direction,const s
             }
         }
     }
-    
+#else
+    float ta;
+    if(bTree->hit(origin,direction, ta, nearest,0,1000000000)){
+        
+    }
+    smallt=ta;
+#endif
     
     f=smallt;
     return true;
@@ -90,7 +99,8 @@ RGB Camera::ColorFromPoint(const vector3& intePoint,Light l,const std::vector<Tr
     if(nearest.getType()==1){
         return Reflect(intePoint, l, t, nearest);
     }
-    double rt,ru,rv;
+
+    float rt,ru,rv;
     RGB ret;
     //vector3 intePoint(origin+direction*smallt);
     
@@ -98,13 +108,21 @@ RGB Camera::ColorFromPoint(const vector3& intePoint,Light l,const std::vector<Tr
     float beta = ((float)(rand()%256))/256.0;
     l.pos=l.pos+l.v1*alpha+l.v2*beta;
     auto reflectDir = l.pos-intePoint;
+#ifndef BVH
     for(auto& tri:t){
         if(IntersectTriangle(intePoint, reflectDir, tri.v[0], tri.v[1], tri.v[2], &rt, &ru, &rv)){
-            if(rt>0.0000000001&&rt<1) {
+            if(rt>0.001&&rt<1) {
                 return RGB(0,0,0);
             }
         }
     }
+#else
+    float ta;
+    if(bTree->hit(intePoint,reflectDir, ta, nearest,0.001,1)){
+        return RGB(0,0,0);
+    }
+    
+#endif
     ret=ret+l.color;
     RGB r = nearest.color;
     shade(l,intePoint,nearest.vn,r);
@@ -114,7 +132,7 @@ RGB Camera::ColorFromPoint(const vector3& intePoint,Light l,const std::vector<Tr
     ret=ret+r;
     return ret;
 }
-RGB Camera::draw(double x,double y,double nx,double ny,const std::vector<Triangle>& t,const std::vector<Light>& l){
+RGB Camera::draw(float x,float y,float nx,float ny,const std::vector<Triangle>& t,const std::vector<Light>& l){
     RGB res(0,0,0);
     
     float rr=0,rg=0,rb=0;
@@ -134,17 +152,17 @@ RGB Camera::draw(double x,double y,double nx,double ny,const std::vector<Triangl
     
     return RGB(rr,rg,rb);
 }
-RGB Camera::drawA(double x,double y,double nx,double ny,const std::vector<Triangle>& t,Light l){
+RGB Camera::drawA(float x,float y,float nx,float ny,const std::vector<Triangle>& t,Light l){
     //auto l = la[0];
     vector3 origin = pos;
     
-    double U = left+(x+0.5)*(right-left)/nx;
-    double V = bottom+(y+0.5)*(top-bottom)/ny;
+    float U = left+(x+0.5)*(right-left)/nx;
+    float V = bottom+(y+0.5)*(top-bottom)/ny;
     
     vector3 direction = w.product(distance)+u.product(U)+v.product(V);
     Triangle nearest;
     
-    double smallt=1/0.0;
+    float smallt=1/0.0;
 
     
     intersect(0,origin, direction, t, nearest, smallt);

@@ -11,6 +11,7 @@
 
 #include "3DObject.h"
 #include "object.h"
+#include "camera.h"
 #endif /* director_h */
 class Director{
 private:

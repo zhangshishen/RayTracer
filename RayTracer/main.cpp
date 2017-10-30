@@ -18,7 +18,7 @@
 #include <OpenGL/OpenGL.h>
 #include <GLUT/GLUT.h>
 #include "BSpline.hpp"
-
+extern int INTERVAL;
 void myinit(void) {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glColor3f(1.0, 0.0, 0.0);
@@ -41,6 +41,20 @@ void rayTracerInit(){
     //dir->addLight(*l);
     obj* obj = new cube(vector3(-15,0,30),35,RGB(100,0,0));
     dir->addObj(obj);
+    
+//    obj = new cube(vector3(-50,0,30),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(50,0,-30),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(50,0,-130),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(50,0,-530),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(50,0,-100),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(20,0,-330),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(20,0,-10),35,RGB(0,100,0));
+//    dir->addObj(obj);obj = new cube(vector3(0,0,-18),35,RGB(0,100,0));
+//    dir->addObj(obj);
+    
+    
+    
+    
     obj = new cube(vector3(50,0,30),35,RGB(0,100,0));
     dir->addObj(obj);
     obj = new cube(vector3(-15,35,30),35,RGB(100,0,0));
@@ -63,17 +77,62 @@ void rayTracerInit(){
     //obj = new wall(vector3(-50,0,-50),vector3(100,150,-50),vector3(0,0,1),RGB(0,50,0));
     dir->addObj(obj);
 }
-std::vector<std::vector<float>> fa(500,std::vector<float>(500,0.5));
-void SolidDisplay(){
+std::vector<std::vector<float>> fa;
+
+float hightLine(float fa){
+    return (fa+1)*1500;
+}
+
+
+float turbulencea(std::vector<std::vector<float>>& fa,float x,float y, float seed, int octaves,
+                 float lacunarity = 2.0, float gain = 0.5)
+{
+    float sum = 0;
+    float freq = 1.0, amp = 1.0;
+    for (int i=0; i < octaves; i++)
+    {
+        if(x*freq>=500||y*freq>=500) break;
+        float n = std::abs(fa[x*freq][y*freq]);
+        sum += n*amp;
+        freq *= lacunarity;
+        amp *= gain;
+    }
+    return sum;
+}
+
+
+
+float electricity(float);
+float ridge(float);
+
+
+
+
+float turb2(std::vector<std::vector<float>>& fa,int x,int y,float size){
+    double value = 0,init = size;
+    while(size>=1){
+        value+=fa[x/size][y/size]*size;
+        size/=2;
+    }
+    return value/init;
+}
+
+
+
+std::vector<std::vector<float>> turb(500,std::vector<float>(500));
+
+
+
+void turbulence(){
     typedef GLfloat point2[2];
+    INTERVAL = 25;
     glClear(GL_COLOR_BUFFER_BIT);
+    
     for(int i = 0;i<500;i++){
         for(int j = 0;j<500;j++){
-//            
-//            auto pa = (m[i][j]+1)*0.5;
-            int c = 90;
-////            c*=pa;
-            c*=fa[i][j];
+//            int c=500*turb2(fa,i,j,16);
+//            int c = 50*ridge(fa[i][j]);
+            int c = 100*(turbulencea(fa,i,j,0.1,10))*0.7;
             glColor3b(c,c,c);
             glBegin(GL_POINTS);
             point2 p;
@@ -84,6 +143,78 @@ void SolidDisplay(){
     }
     glFlush();
 }
+
+void SolidDisplay(){
+    typedef GLfloat point2[2];
+    INTERVAL = 50;
+    glClear(GL_COLOR_BUFFER_BIT);
+    for(int i = 0;i<500;i++){
+        for(int j = 0;j<500;j++){
+//
+            int c = 220*ridge(fa[i][j]);
+//            int c = 127*(fa[i][j]+1)*0.5;
+//            int c = 200;
+//            c*=pa;
+//            c=127 *(1-std::abs(fa[i][j]));
+//            c*=(fa[i][j]+1)*0.3;
+//            if(c>127) c=127;
+            
+//            c = hightLine(fa[i][j]);
+            glColor3b(c,c,c);
+            glBegin(GL_POINTS);
+            point2 p;
+            p[0]=i,p[1]=j;
+            glVertex2fv(p);
+            glEnd();
+        }
+    }
+    glFlush();
+}
+
+float ridge(float a){
+    return 0.7*(1 - std::abs(a));
+}
+
+float electricity(float fa){
+    int para = 20; //width
+    
+    para*=std::abs(fa*60);
+    if(para>127) para=127;
+    para=(127-para);
+    
+    para*=0.5; //intensity
+    
+    return para;
+}
+
+void FractalDisplay(){
+    typedef GLfloat point2[2];
+    INTERVAL=100;
+    fa = SolidNoise(500,500);
+    INTERVAL=50;
+    auto fb = SolidNoise(500,500);
+    INTERVAL=25;
+    auto fc = SolidNoise(500,500);
+    glClear(GL_COLOR_BUFFER_BIT);
+    for(int i = 0;i<500;i++){
+        for(int j = 0;j<500;j++){
+
+            int c=1;
+            c*=3*(std::abs(fa[i][j])*60);
+            if(c>127) c=127;
+            c=(127-c);
+            c*=0.7;
+            glColor3b(c,c,c);
+            glBegin(GL_POINTS);
+            point2 p;
+            p[0]=i,p[1]=j;
+            glVertex2fv(p);
+            glEnd();
+        }
+    }
+    glFlush();
+}
+
 void display(void) {
     
     typedef GLfloat point2[2];
@@ -103,6 +234,7 @@ void display(void) {
     }
     glFlush();
 }
+
 void SPLine(void){
     typedef GLfloat point2[2];
     point2 p = {0.0, 0.0};
@@ -130,18 +262,22 @@ void SPLine(void){
     }
     glFlush();
 }
+
 int main(int argc, char **argv) {
     
-    vector3 dir(-4,-7,20),origin(0,20,-20),v1(-10,0,20),v2(-10,0,40),v3(-10,20,20);
-    double x,y,z;
+//    vector3 dir(-4,-7,20),origin(0,20,-20),v1(-10,0,20),v2(-10,0,40),v3(-10,20,20);
+//    float x,y,z;
+    
     fa = SolidNoise(500,500);
-    rayTracerInit();
+    //rayTracerInit();
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize (500, 500);
     glutInitWindowPosition (0, 0);
-    glutCreateWindow ("Sierpinski Gasket");
-    glutDisplayFunc (SPLine);
+    glutCreateWindow ("Ray Tracer");
+    glutDisplayFunc (SolidDisplay);
+    
     myinit();
+
     glutMainLoop();
 }

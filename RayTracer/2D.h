@@ -12,9 +12,9 @@
 
 #endif /* _D_h */
 struct Point{
-    double x;
-    double y;
+    float x;
+    float y;
 };
-double determinant(double v1, double v2, double v3, double v4);  // 行列式
+float determinant(float v1, float v2, float v3, float v4);  // 行列式
 
 bool intersect3(Point aa, Point bb, Point cc, Point dd);

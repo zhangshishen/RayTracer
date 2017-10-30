@@ -22,7 +22,7 @@ public:
     void setColor(unsigned char r,unsigned char g,unsigned char b);
     RGB(unsigned char r,unsigned char g,unsigned char b);
     RGB operator+(const RGB& rgb) const;
-    RGB operator*(double d) const;
+    RGB operator*(float d) const;
 };
 
 
@@ -30,28 +30,28 @@ typedef float Matrix4[4][4];
 class wall;
 class vector3{
 public:
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
     friend wall;
 public:
     vector3(){};
-    void setPos(double x,double y,double z){this->x=x;this->y=y;this->z=z;}
-    vector3(double x,double y,double z):x(x),y(y),z(z){};
+    void setPos(float x,float y,float z){this->x=x;this->y=y;this->z=z;}
+    vector3(float x,float y,float z):x(x),y(y),z(z){};
     vector3 operator+(const vector3& a) const;
     vector3 cross(const vector3 &a) const;
     vector3 operator-(const vector3& a) const;
-    double operator[](int a) const;
+    float operator[](int a) const;
     bool isZero();
     void normalize();
     bool operator==(const vector3&) const;
     vector3 operator-();
-    vector3 product(double a) const;
-    vector3 operator*(double a) const;
+    vector3 product(float a) const;
+    vector3 operator*(float a) const;
     vector3& operator=(const vector3& v);
     
-    double operator*(const vector3& a) const;
-    double lengthSquare();
+    float operator*(const vector3& a) const;
+    float lengthSquare();
     
 };
 
@@ -64,7 +64,7 @@ public:
 };
 bool IntersectTriangle(const vector3& orig, const vector3& dir,
                        const vector3& v0, const vector3& v1, const vector3& v2,
-                       double* t, double* u, double* v);
+                       float* t, float* u, float* v);
 
 class Triangle{
 public:

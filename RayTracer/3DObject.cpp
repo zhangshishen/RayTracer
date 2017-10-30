@@ -31,7 +31,7 @@ void RGB::setColor(unsigned char r,unsigned char g,unsigned char b){
     blue = b;
 }
 
-RGB RGB::operator*(double d) const{
+RGB RGB::operator*(float d) const{
     RGB ret;
     if(red*d>red) ret.red = 255;
     else ret.red=red*d;
@@ -60,7 +60,7 @@ vector3 vector3::operator-(const vector3& a) const{
     ret.setPos(x-a.x, y-a.y, z-a.z);
     return ret;
 }
-double vector3::operator[](int a) const{
+float vector3::operator[](int a) const{
     if(a==0) return x;
     if(a==1) return y;
     else return z;
@@ -69,7 +69,7 @@ bool vector3::isZero(){
     return (x==0.0)&&(y==0.0)&&(z==0.0);
 }
 void vector3::normalize(){
-    double m = x*x+y*y+z*z;
+    float m = x*x+y*y+z*z;
     m=sqrt(m);
     x=x/m;
     y/=m;
@@ -80,12 +80,12 @@ vector3 vector3::operator-(){
     ret.setPos(-x, -y, -z);
     return ret;
 }
-vector3 vector3::product(double a) const{
+vector3 vector3::product(float a) const{
     vector3 ret;
     ret.setPos(a*x, a*y, a*z);
     return ret;
 }
-vector3 vector3::operator*(double a) const{
+vector3 vector3::operator*(float a) const{
     vector3 ret;
     ret.setPos(a*x, a*y, a*z);
     return ret;
@@ -100,10 +100,10 @@ bool vector3::operator==(const vector3& v) const{
     return (this->x==v.x)&&(this->y==v.y)&&(this->z==v.z);
 }
 
-double vector3::operator*(const vector3& a) const{
+float vector3::operator*(const vector3& a) const{
     return a.x*x+a.y*y+a.z*z;
 }
-double vector3::lengthSquare(){
+float vector3::lengthSquare(){
     return x*x+y*y+z*z;
 }
 
@@ -116,7 +116,7 @@ void Object::setPos(const vector3& v){
 }
 bool IntersectTriangle(const vector3& orig, const vector3& dir,
                        const vector3& v0, const vector3& v1, const vector3& v2,
-                       double* t, double* u, double* v)
+                       float* t, float* u, float* v)
 {
     // E1
     vector3 E1 = v1 - v0;
@@ -128,7 +128,7 @@ bool IntersectTriangle(const vector3& orig, const vector3& dir,
     vector3 P = dir.cross(E2);
     
     // determinant
-    double det = E1*P;
+    float det = E1*P;
     
     // keep det > 0, modify T accordingly
     vector3 T;
@@ -152,7 +152,7 @@ bool IntersectTriangle(const vector3& orig, const vector3& dir,
         return false;
     *t = E2*Q;
     
-    double fInvDet = 1.0 / det;
+    float fInvDet = 1.0 / det;
     *t *= fInvDet;
     *u *= fInvDet;
     *v *= fInvDet;

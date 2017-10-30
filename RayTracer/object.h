@@ -9,12 +9,14 @@
 #ifndef object_h
 #define object_h
 
-#include "camera.h"
+//#include "camera.h"
+#include "3DObject.h"
 #include "math.h"
 #define SPHERELONG 10
 #define SPHERELA 23
 #define PI 3.14159265
 #endif /* object_h */
+#pragma once
 class obj{
 public:
     enum type{solid,mirror};
@@ -120,7 +122,7 @@ public:
     Triangle triangle[12];
     virtual Triangle* getT(int &n);
     enum type getType(){return solid;}
-    cube(vector3 p1,double size,RGB rgb);
+    cube(vector3 p1,float size,RGB rgb);
     cube();
 };
 
